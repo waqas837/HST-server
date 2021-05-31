@@ -241,22 +241,13 @@ const addtocart = async (req, res) => {
   const data = req.body; 
   const email ={email:data.email}
   const title1 = data.title
-  console.log(title1)
-  try {
-    const user = await usersignup.findOne(email)
-    console.log(user)
-    
-    if(!user) return res.status(400).json({msg: "User does not exist."})
-    await usersignup.findOneAndUpdate({email: data.email}, {
-      cart: data
-  })
-    //  await cartadd.syncIndexes();
-     // if(dataResult){
-
-    // }
-    // const dataCheck =  cartadd({email:data.email,products:data});
-    // await dataCheck.save();
-     
+   try {
+    // const user = await usersignup.findOne(email)
+    var newData = new cartadd(data)
+    await newData.save()
+     if(newData){
+       res.json({ok:"success"})
+     }
   } catch (error) {
     console.log(`error during adding a product ${error}`);
     res.json({err:"err"});
@@ -266,7 +257,17 @@ const addtocart = async (req, res) => {
 const getallcartSingle = async (req, res) => {
   const email = req.body
      try {
-    const data = await cartadd.find({email:email.user});
+    const data = await cartadd.find();
+     res.json({ data:data.map((val)=>val) });
+  } catch (error) {
+    console.log(`error during the getall data ${error}`);
+  }
+};
+// get all getallcartSinglelimited
+const getallcartSinglelimited = async (req, res) => {
+  const email = req.body
+     try {
+    const data = await cartadd.find().limit(2);
      res.json({ data:data.map((val)=>val) });
   } catch (error) {
     console.log(`error during the getall data ${error}`);
@@ -277,7 +278,7 @@ const cartSingleRemove= async (req, res) => {
   const { id } = req.params;
   const email = req.body
   try {
-    const singleUserProduct =await cartadd.deleteOne({email:email.user})
+    const singleUserProduct =await cartadd.findByIdAndDelete({_id:req.params.id})
     console.log(singleUserProduct)
     res.json({ success: true });
   } catch (error) {
@@ -313,7 +314,7 @@ const  findSingleCartProduct= async (req, res) => {
   const email = req.body;
   try {
     //remaining
-    const data = await cartadd.findOne({email:email.user,products:_id});
+    const data = await cartadd.findById({_id});
     console.log(data);
     res.json({ data });
   } catch (error) {
@@ -440,6 +441,6 @@ module.exports = {
   findSingleService,
   updateServiceData,
   deleteServiceData,getDataCalc,
-  getserviceData,addtocart,getallcartSingle,cartSingleRemove,findSingleProductforadd
+  getserviceData,addtocart,getallcartSingle,cartSingleRemove,findSingleProductforadd,getallcartSinglelimited
   ,cartqtyUpdate,findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord
 };

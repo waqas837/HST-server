@@ -28,13 +28,6 @@ const userData = new mongoose.Schema({
     required: true,
   },
   
-  cart: {
-    type: Array,
-    default: []
-}
-},
- {
-timestamps: true
 });
 //admin
 const admin = new mongoose.Schema({
@@ -76,7 +69,7 @@ const productSchema = new mongoose.Schema({
 }); 
 // Product schema
 const product = new mongoose.Schema({
-  
+ 
 })
 
 
@@ -86,7 +79,20 @@ const addtocart = new mongoose.Schema({
   email:{
     type:String,
   },
-  products:[product]
+  title: {
+    type: String,
+  },
+  qty: {
+    type: String,
+    default: 0,
+  },
+  selectedFile: String,
+  price: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
   
 });
 // Services schema

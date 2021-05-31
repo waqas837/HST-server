@@ -9,7 +9,7 @@ const {
   findSingleUser,
   addProduct,
   getProduct,
-  deleteProduct,findSingleProduct,udpateProduct,AdminSignIn,signupAdmin,
+  deleteProduct,findSingleProduct,udpateProduct,AdminSignIn,signupAdmin,getallcartSinglelimited,
   addServices,deleteServiceData,findSingleService,getserviceData,updateServiceData,
   addtocart,getallcartSingle,findSingleProductforadd,cartSingleRemove,cartqtyUpdate,
   findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord,getDataCalc
@@ -39,7 +39,8 @@ router.put("/udpateservice/:id", updateServiceData);
 // routes for the addtocart user
 router.post("/findSingleProductforadd/:id",findSingleProductforadd);
 router.post("/addtocartSingle",addtocart);
-router.post("/getallcartSingle",getallcartSingle);
+router.get("/getallcartSingle",getallcartSingle);
+router.get("/getProductlimited",getallcartSinglelimited);
 router.post("/cartSingleRemove/:id",cartSingleRemove);
 router.put("/cartqtyUpdate/:id",cartqtyUpdate);
 router.post("/findSingleCartProduct/:_id",findSingleCartProduct)
