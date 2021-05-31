@@ -124,23 +124,28 @@ const orders = new mongoose.Schema({
 const priceCalc = new mongoose.Schema({
   CementPrice: {
     type:Number,
-    required:true
+    required:true,
+    unique:true
   },
   OneMarlaPrice: {
     type:Number,
-    required:true
+    required:true,
+    unique:true
   },
   SandPrice: {
     type:Number,
-    required:true
+    required:true,
+    unique:true
   },
   SmallStonesPrice: {
     type:Number,
-    required:true
+    required:true,
+    unique:true
   },
   qtyForCement:  {
     type:Number,
-    required:true
+    required:true,
+    unique:true
   },
   qtyForSand: {
     type:Number,
@@ -148,7 +153,8 @@ const priceCalc = new mongoose.Schema({
   },
   qtyForSmallStones: {
     type:Number,
-    required:true
+    required:true,
+    unique:true
   },
 });
 const usersignup = new mongoose.model("usersignup", userData);

@@ -11,7 +11,7 @@ const {
   getProduct,
   deleteProduct,findSingleProduct,udpateProduct,AdminSignIn,signupAdmin,getallcartSinglelimited,
   addServices,deleteServiceData,findSingleService,getserviceData,updateServiceData,
-  addtocart,getallcartSingle,findSingleProductforadd,cartSingleRemove,cartqtyUpdate,
+  addtocart,getallcartSingle,findSingleProductforadd,cartSingleRemove,cartqtyUpdate,updatePrice,
   findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord,getDataCalc
 } = require("./userLogics");
 // routes for user account
@@ -60,6 +60,8 @@ router.put("/aftersalesemptycart",aftersalesemptycart)
 router.post("/savePriceCalcRecord",savePriceCalcRecord)
 // get data for the price calculator
 router.get("/getDataCalc",getDataCalc)
+//udpate the record
+router.put("/updatePrice",updatePrice)
 
 module.exports = router;
 

@@ -423,6 +423,16 @@ try {
   console.log(`error during getting data of price calculutor ${error}`)
 }
 }
+// updatePrice for admin
+const updatePrice = async (req, res) => {
+  console.log(req.body)
+  try {
+    const data = await priceCalculator.updateOne(req.body);
+    res.json(data)
+  } catch (error) {
+    console.log(`error during updating of price calculutor ${error}`)
+  }
+  }
 module.exports = {
   signup,
   singin,
@@ -441,6 +451,6 @@ module.exports = {
   findSingleService,
   updateServiceData,
   deleteServiceData,getDataCalc,
-  getserviceData,addtocart,getallcartSingle,cartSingleRemove,findSingleProductforadd,getallcartSinglelimited
-  ,cartqtyUpdate,findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord
+  getserviceData,addtocart,getallcartSingle,cartSingleRemove,findSingleProductforadd,getallcartSinglelimited,updatePrice,
+  cartqtyUpdate,findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord
 };
