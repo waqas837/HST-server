@@ -39,7 +39,7 @@ router.put("/udpateservice/:id", updateServiceData);
 // routes for the addtocart user
 router.post("/findSingleProductforadd/:id",findSingleProductforadd);
 router.post("/addtocartSingle",addtocart);
-router.get("/getallcartSingle",getallcartSingle);
+router.get("/getallcartSingle/:email",getallcartSingle);
 router.get("/getProductlimited",getallcartSinglelimited);
 router.post("/cartSingleRemove/:id",cartSingleRemove);
 router.put("/cartqtyUpdate/:id",cartqtyUpdate);

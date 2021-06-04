@@ -242,12 +242,24 @@ const addtocart = async (req, res) => {
   const email ={email:data.email}
   const title1 = data.title
    try {
-    // const user = await usersignup.findOne(email)
-    var newData = new cartadd(data)
-    await newData.save()
-     if(newData){
-       res.json({ok:"success"})
-     }
+    const findData = await cartadd.find({email:req.body.email})
+    //if user does not exists
+   if(findData.length===0){
+     const data = new cartadd({email:req.body.email,products:req.body})
+     await data.save()
+     res.json(data)
+   }
+   //if user exists
+   if(findData.length!==0){
+     const data = await cartadd.findOneAndUpdate({email:req.body.email,
+    "products.title":{$ne:req.body.title}},
+     {$addToSet:{products:req.body}},{new:true})
+        if(data===null){
+         res.json({Err:"You have already this item"})
+       }else{
+         res.json({data})
+       }
+   }
   } catch (error) {
     console.log(`error during adding a product ${error}`);
     res.json({err:"err"});
@@ -255,11 +267,11 @@ const addtocart = async (req, res) => {
 };
 // get all the products added to cart
 const getallcartSingle = async (req, res) => {
-  const email = req.body
+      
      try {
-    const data = await cartadd.find();
-     res.json({ data:data.map((val)=>val) });
-  } catch (error) {
+    const data = await cartadd.find({email:req.params.email});
+    res.json({data})
+   } catch (error) {
     console.log(`error during the getall data ${error}`);
   }
 };
@@ -276,11 +288,12 @@ const getallcartSinglelimited = async (req, res) => {
 //remove addto cart single item
 const cartSingleRemove= async (req, res) => {
   const { id } = req.params;
-  const email = req.body
+  const email = req.body.user
   try {
-    const singleUserProduct =await cartadd.findByIdAndDelete({_id:req.params.id})
-    console.log(singleUserProduct)
-    res.json({ success: true });
+    const singleUserProduct = await cartadd.findOneAndUpdate({email},{
+      $pull:{products:{_id:id}}
+    })
+     res.json({ success: true });
   } catch (error) {
     console.log(error);
   }
@@ -299,11 +312,13 @@ const findSingleProductforadd = async (req, res) => {
 //update a addtocart-qty
 const cartqtyUpdate = async (req, res) => {
   const { id } = req.params;
-  const data = req.body;
-  // console.log(data);
+  const email = req.body.email;
+  console.log(id,email);
+
   try {
-    const newData = await cartadd.findByIdAndUpdate({ _id: id },data);
-    res.json({ data: newData });
+    const newData = await cartadd.updateMany({email:email,"products._id":id},
+    { $set:{"products.$.qty":req.body.qty}});
+     res.json({ data: newData });
   } catch (error) {
     console.log(`error during the update cart qty ${error}`);
   }
@@ -311,12 +326,14 @@ const cartqtyUpdate = async (req, res) => {
 //find a single user
 const  findSingleCartProduct= async (req, res) => {
   const { _id } = req.params;
-  const email = req.body;
-  try {
-    //remaining
-    const data = await cartadd.findById({_id});
-    console.log(data);
-    res.json({ data });
+  const email = req.body.user;
+   try {
+    //first we find out the whole doc by which user is login
+    const data = await cartadd.findOne({email});
+ //we have a special id method for the for finding with id in the nested documents
+    // console.log(data.products.id(_id));
+    //so we have now the single document of the nested document
+    res.json({data:data.products.id(_id)});
   } catch (error) {
     console.log(`error during find a one user's product data ${error}`);
   }

@@ -69,16 +69,6 @@ const productSchema = new mongoose.Schema({
 }); 
 // Product schema
 const product = new mongoose.Schema({
- 
-})
-
-
-
-// addtocart schema
-const addtocart = new mongoose.Schema({
-  email:{
-    type:String,
-  },
   title: {
     type: String,
   },
@@ -93,6 +83,16 @@ const addtocart = new mongoose.Schema({
   description: {
     type: String,
   },
+})
+
+
+
+// addtocart schema
+const addtocart = new mongoose.Schema({
+  email:{
+    type:String,
+  },
+  products:[product]
   
 });
 // Services schema
