@@ -12,7 +12,7 @@ const {
   deleteProduct,findSingleProduct,udpateProduct,AdminSignIn,signupAdmin,getallcartSinglelimited,
   addServices,deleteServiceData,findSingleService,getserviceData,updateServiceData,
   addtocart,getallcartSingle,findSingleProductforadd,cartSingleRemove,cartqtyUpdate,updatePrice,
-  findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord,getDataCalc
+  findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord,getDataCalc,getAllTheProduct,
 } = require("./userLogics");
 // routes for user account
 router.post("/signup", signup);
@@ -23,7 +23,8 @@ router.put("/udpateUser/:id", udpateUser);
 router.get("/findSingleUser/:id", findSingleUser);
 // routes for the productPanel
 router.post("/addProduct", addProduct);
-router.get("/getProduct", getProduct);
+router.get("/getProduct", getProduct); 
+router.get("/getAllTheProduct", getAllTheProduct);
 router.delete("/deleteProduct/:id", deleteProduct);
 router.get("/findSingleProduct/:id", findSingleProduct);
 router.put("/udpateProduct/:id", udpateProduct);

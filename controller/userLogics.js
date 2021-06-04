@@ -96,8 +96,17 @@ const addProduct = async (req, res) => {
   }
 };
 
-// get all data
+// get all data but with limit
 const getProduct = async (req, res) => {
+  try {
+    const data = await Product.find().limit(3);
+    res.json({ data });
+  } catch (error) {
+    console.log(`error during the getall product data`);
+  }
+};
+//get all the data only 
+const getAllTheProduct = async (req, res) => {
   try {
     const data = await Product.find();
     res.json({ data });
@@ -467,7 +476,7 @@ module.exports = {
   addServices,
   findSingleService,
   updateServiceData,
-  deleteServiceData,getDataCalc,
+  deleteServiceData,getDataCalc,getAllTheProduct,
   getserviceData,addtocart,getallcartSingle,cartSingleRemove,findSingleProductforadd,getallcartSinglelimited,updatePrice,
   cartqtyUpdate,findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord
 };
