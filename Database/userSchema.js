@@ -83,7 +83,13 @@ const product = new mongoose.Schema({
   description: {
     type: String,
   },
-})
+  purchaseDate:{
+    type:Date,
+    default:Date.now
+}
+},
+ 
+)
 
 
 

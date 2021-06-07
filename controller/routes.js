@@ -56,7 +56,7 @@ router.get("/orders",orders)
 // note:we have to use the put method to delete a record as put method
 // is used for update a record but in fact we are updating our record
 // on basis of removed record
-router.put("/aftersalesemptycart",aftersalesemptycart)
+router.put("/aftersalesemptycart/:email",aftersalesemptycart)
 // save price calculator record
 router.post("/savePriceCalcRecord",savePriceCalcRecord)
 // get data for the price calculator

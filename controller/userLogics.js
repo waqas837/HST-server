@@ -417,8 +417,7 @@ const userdataDetails = async (req, res) => {
 // customer after sales details
 const aftersalesemptycart = async (req, res) => {
   try {
-      const dataCheck =  await cartadd.deleteMany({})
-      // console.log(dataCheck)
+      const dataCheck =  await cartadd.findOneAndUpdate({email:req.params.email},{$unset:{products:1}})
   } catch (error) {
     console.log(`error during adding reomving empty cart ${error}`);
     console.log(error);
@@ -428,7 +427,7 @@ const aftersalesemptycart = async (req, res) => {
 // savePriceCalcRecord
 const savePriceCalcRecord = async (req, res) => {
   const data = req.body;
-  console.log(data)
+ 
    try {
       const dataCheck = new priceCalculator(data);
       await dataCheck.save();
@@ -451,7 +450,7 @@ try {
 }
 // updatePrice for admin
 const updatePrice = async (req, res) => {
-  console.log(req.body)
+  
   try {
     const data = await priceCalculator.updateOne(req.body);
     res.json(data)
