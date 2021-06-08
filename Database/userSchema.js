@@ -163,6 +163,30 @@ const priceCalc = new mongoose.Schema({
     unique:true
   },
 });
+//user slip
+const userSlipData = new mongoose.Schema({
+  title:{
+    type:String
+  },
+  price:{
+    type:String
+  },
+  totalPrice:{
+    type:String
+  },
+  oneProduct:{
+    type:String
+  }
+})
+// user slip
+const slipSch = new mongoose.Schema({
+  email: {
+    type:String,
+    required:true,
+    unique:true
+  },
+   slip:[userSlipData]
+});
 const usersignup = new mongoose.model("usersignup", userData);
 const Product = new mongoose.model("productData", productSchema);
 const AdminData = new mongoose.model("adminData", admin);
@@ -170,6 +194,7 @@ const ServiceData = new mongoose.model("serviceData", serviceSchema);
 const cartadd = new mongoose.model("addtocartitems", addtocart);
 const custmOrders = new mongoose.model("customerorders", orders);
 const priceCalculator = new mongoose.model("priceCalcultr", priceCalc);
+const slip = new mongoose.model("userslip", slipSch);
 
 module.exports = {
   usersignup,
@@ -177,5 +202,5 @@ module.exports = {
   AdminData,
   ServiceData,
   cartadd,
-  custmOrders,priceCalculator
+  custmOrders,priceCalculator,slip
 };

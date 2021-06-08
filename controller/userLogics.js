@@ -1,4 +1,4 @@
-const { usersignup, Product, AdminData, ServiceData,cartadd,custmOrders,priceCalculator } = require("../Database/userSchema");
+const { usersignup, Product, AdminData, ServiceData,cartadd,custmOrders, priceCalculator, slip } = require("../Database/userSchema");
 const { v4: uuidv4 } = require("uuid");
 const stripe = require("stripe")(
   "sk_test_51IsiGeERaO9lvsvDadobGmPv6X817aNWoxTLY1w72DPPcZMi1Ihf2mMTThB0VNP1ZaGpF0dL33GA3eNOE16zLBkb00CtlKMuR9"
@@ -458,6 +458,19 @@ const updatePrice = async (req, res) => {
     console.log(`error during updating of price calculutor ${error}`)
   }
   }
+ 
+  // user slips after purchase
+  const saveSlip = async (req, res) => {
+     
+    try {
+      const data = new slip({email:req.params.email},{slip:req.body});
+      await data.save()
+      res.json(data)
+    } catch (error) {
+      console.log(`error during saving user slip ${error}`)
+    }
+    }
+
 module.exports = {
   signup,
   singin,
@@ -474,7 +487,7 @@ module.exports = {
   signupAdmin,
   addServices,
   findSingleService,
-  updateServiceData,
+  updateServiceData,saveSlip,
   deleteServiceData,getDataCalc,getAllTheProduct,
   getserviceData,addtocart,getallcartSingle,cartSingleRemove,findSingleProductforadd,getallcartSinglelimited,updatePrice,
   cartqtyUpdate,findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord

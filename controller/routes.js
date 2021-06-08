@@ -8,7 +8,7 @@ const {
   udpateUser,
   findSingleUser,
   addProduct,
-  getProduct,
+  getProduct,saveSlip,
   deleteProduct,findSingleProduct,udpateProduct,AdminSignIn,signupAdmin,getallcartSinglelimited,
   addServices,deleteServiceData,findSingleService,getserviceData,updateServiceData,
   addtocart,getallcartSingle,findSingleProductforadd,cartSingleRemove,cartqtyUpdate,updatePrice,
@@ -63,6 +63,8 @@ router.post("/savePriceCalcRecord",savePriceCalcRecord)
 router.get("/getDataCalc",getDataCalc)
 //udpate the record
 router.put("/updatePrice",updatePrice)
+//user slip
+router.post("/saveSlip",saveSlip)
 
 module.exports = router;
 
