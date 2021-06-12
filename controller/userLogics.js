@@ -1,4 +1,4 @@
-const { usersignup, Product, AdminData, ServiceData,cartadd,custmOrders, priceCalculator, slip } = require("../Database/userSchema");
+const { usersignup, Product, AdminData, ServiceData,cartadd,custmOrders, priceCalculator, slip } = require("../Model/userSchema");
 const { v4: uuidv4 } = require("uuid");
 const stripe = require("stripe")(
   "sk_test_51IsiGeERaO9lvsvDadobGmPv6X817aNWoxTLY1w72DPPcZMi1Ihf2mMTThB0VNP1ZaGpF0dL33GA3eNOE16zLBkb00CtlKMuR9"
@@ -99,7 +99,7 @@ const addProduct = async (req, res) => {
 // get all data but with limit
 const getProduct = async (req, res) => {
   try {
-    const data = await Product.find().limit(3);
+    const data = await Product.find().limit(4);
     res.json({ data });
   } catch (error) {
     console.log(`error during the getall product data`);
@@ -310,7 +310,7 @@ const cartSingleRemove= async (req, res) => {
 // find the single data for adding to the cart
 const findSingleProductforadd = async (req, res) => {
   const { id } = req.params;
-  console.log(id)
+  
   try {
     const data = await Product.findById({ _id: id });
     res.json({ data });
@@ -322,7 +322,7 @@ const findSingleProductforadd = async (req, res) => {
 const cartqtyUpdate = async (req, res) => {
   const { id } = req.params;
   const email = req.body.email;
-  console.log(id,email);
+   
 
   try {
     const newData = await cartadd.updateMany({email:email,"products._id":id},
@@ -403,7 +403,7 @@ const orders = async (req, res) => {
 // customer after sales details
 const userdataDetails = async (req, res) => {
   const data = req.body;
-  console.log(data);
+ 
   try {
       const dataCheck = new custmOrders(data);
       await dataCheck.save();
@@ -461,10 +461,10 @@ const updatePrice = async (req, res) => {
  
   // user slips after purchase
   const saveSlip = async (req, res) => {
-     
     try {
-      const data = new slip({email:req.params.email},{slip:req.body});
+      const data = new slip(req.body);
       await data.save()
+      console.log(`this is ${data}`)
       res.json(data)
     } catch (error) {
       console.log(`error during saving user slip ${error}`)

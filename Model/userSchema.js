@@ -163,8 +163,13 @@ const priceCalc = new mongoose.Schema({
     unique:true
   },
 });
-//user slip
-const userSlipData = new mongoose.Schema({
+
+// user slip
+const slipSch = new mongoose.Schema({
+  email: {
+    type:String,
+    required:true,
+  },
   title:{
     type:String
   },
@@ -177,15 +182,6 @@ const userSlipData = new mongoose.Schema({
   oneProduct:{
     type:String
   }
-})
-// user slip
-const slipSch = new mongoose.Schema({
-  email: {
-    type:String,
-    required:true,
-    unique:true
-  },
-   slip:[userSlipData]
 });
 const usersignup = new mongoose.model("usersignup", userData);
 const Product = new mongoose.model("productData", productSchema);
