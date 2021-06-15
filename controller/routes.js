@@ -67,5 +67,3 @@ router.put("/updatePrice",updatePrice)
 router.post("/saveSlip",saveSlip)
 
 module.exports = router;
-
-
