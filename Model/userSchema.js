@@ -1,16 +1,19 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 mongoose
-  .connect("mongodb+srv://hst:hst@cluster0.pds0e.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
+  .connect(
+    "mongodb+srv://hst:hst@cluster0.pds0e.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    }
+  )
   .then(() => console.log("Database connected"))
   .catch((err) => console.log(`DB connection failed ${err}`));
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useCreateIndex", true);
-const userData = new mongoose.Schema({ 
+const userData = new mongoose.Schema({
   email: {
     unique: true,
     type: String,
@@ -27,7 +30,6 @@ const userData = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
 });
 //admin
 const admin = new mongoose.Schema({
@@ -49,7 +51,6 @@ const admin = new mongoose.Schema({
   },
 });
 
-
 // Product schema
 const productSchema = new mongoose.Schema({
   title: {
@@ -66,7 +67,10 @@ const productSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-}); 
+  view:{
+    type: String,
+  }
+});
 // Product schema
 const product = new mongoose.Schema({
   title: {
@@ -83,23 +87,21 @@ const product = new mongoose.Schema({
   description: {
     type: String,
   },
-  purchaseDate:{
-    type:Date,
-    default:Date.now
-}
-},
- 
-)
-
-
+  purchaseDate: {
+    type: Date,
+    default: Date.now,
+  },
+  view: {
+    type: String,
+  },
+});
 
 // addtocart schema
 const addtocart = new mongoose.Schema({
-  email:{
-    type:String,
+  email: {
+    type: String,
   },
-  products:[product]
-  
+  products: [product],
 });
 // Services schema
 const serviceSchema = new mongoose.Schema({
@@ -116,72 +118,70 @@ const serviceSchema = new mongoose.Schema({
   },
 });
 
-
 const orders = new mongoose.Schema({
   totalprice: {
     type: String,
   },
   useremail: {
     type: String,
-
   },
 });
 // price calculator
 const priceCalc = new mongoose.Schema({
   CementPrice: {
-    type:Number,
-    required:true,
-    unique:true
+    type: Number,
+    required: true,
+    unique: true,
   },
   OneMarlaPrice: {
-    type:Number,
-    required:true,
-    unique:true
+    type: Number,
+    required: true,
+    unique: true,
   },
   SandPrice: {
-    type:Number,
-    required:true,
-    unique:true
+    type: Number,
+    required: true,
+    unique: true,
   },
   SmallStonesPrice: {
-    type:Number,
-    required:true,
-    unique:true
+    type: Number,
+    required: true,
+    unique: true,
   },
-  qtyForCement:  {
-    type:Number,
-    required:true,
-    unique:true
+  qtyForCement: {
+    type: Number,
+    required: true,
+    unique: true,
   },
   qtyForSand: {
-    type:Number,
-    required:true
+    type: Number,
+    required: true,
   },
   qtyForSmallStones: {
-    type:Number,
-    required:true,
-    unique:true
+    type: Number,
+    required: true,
+    unique: true,
   },
 });
 
 // user slip
 const slipSch = new mongoose.Schema({
   email: {
-    type:String,
-    required:true,
+    type: String,
+    required: true,
   },
-  title:{
-    type:String
+  title: {
+    type: String,
   },
-  price:{
-    type:String
+  price: {
+    type: String,
   },
-  totalPrice:{
-    type:String
+  totalPrice: {
+    type: String,
   },
-  oneProduct:{
-    type:String
-  }
+  oneProduct: {
+    type: String,
+  },
 });
 const usersignup = new mongoose.model("usersignup", userData);
 const Product = new mongoose.model("productData", productSchema);
@@ -198,5 +198,7 @@ module.exports = {
   AdminData,
   ServiceData,
   cartadd,
-  custmOrders,priceCalculator,slip
+  custmOrders,
+  priceCalculator,
+  slip,
 };
