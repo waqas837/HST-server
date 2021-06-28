@@ -41,7 +41,7 @@ const singin = async (req, res) => {
       res.json({ err: "err" });
     }
     if (isExists !== null) {
-      res.json({ success: "success", user: isExists});
+      res.json({ success: "success", user: isExists.email ,fulldata:isExists});
     }
   } catch (error) {
     console.log(`error during sigin the data ${error}`);
