@@ -1,4 +1,13 @@
-const { usersignup, Product, AdminData, ServiceData,cartadd,custmOrders, priceCalculator, slip } = require("../Model/userSchema");
+const {
+  usersignup,
+  Product,
+  AdminData,
+  ServiceData,
+  cartadd,
+  custmOrders,
+  priceCalculator,
+  slip,
+} = require("../Model/userSchema");
 const { v4: uuidv4 } = require("uuid");
 const stripe = require("stripe")(
   "sk_test_51IsiGeERaO9lvsvDadobGmPv6X817aNWoxTLY1w72DPPcZMi1Ihf2mMTThB0VNP1ZaGpF0dL33GA3eNOE16zLBkb00CtlKMuR9"
@@ -32,7 +41,7 @@ const singin = async (req, res) => {
       res.json({ err: "err" });
     }
     if (isExists !== null) {
-      res.json({ success: "success", user: isExists.email });
+      res.json({ success: "success", user: isExists});
     }
   } catch (error) {
     console.log(`error during sigin the data ${error}`);
@@ -105,7 +114,7 @@ const getProduct = async (req, res) => {
     console.log(`error during the getall product data`);
   }
 };
-//get all the data only 
+//get all the data only
 const getAllTheProduct = async (req, res) => {
   try {
     const data = await Product.find();
@@ -247,62 +256,66 @@ const addServices = async (req, res) => {
 
 //find a user and then we must only add the record
 const addtocart = async (req, res) => {
-  const data = req.body; 
-  const email ={email:data.email}
-  const title1 = data.title
-   try {
-    const findData = await cartadd.find({email:req.body.email})
+  const data = req.body;
+  const email = { email: data.email };
+  const title1 = data.title;
+  try {
+    const findData = await cartadd.find({ email: req.body.email });
     //if user does not exists
-   if(findData.length===0){
-     const data = new cartadd({email:req.body.email,products:req.body})
-     await data.save()
-     res.json(data)
-   }
-   //if user exists
-   if(findData.length!==0){
-     const data = await cartadd.findOneAndUpdate({email:req.body.email,
-    "products.title":{$ne:req.body.title}},
-     {$addToSet:{products:req.body}},{new:true})
-        if(data===null){
-         res.json({Err:"You have already this item"})
-       }else{
-         res.json({data})
-       }
-   }
+    if (findData.length === 0) {
+      const data = new cartadd({ email: req.body.email, products: req.body });
+      await data.save();
+      res.json(data);
+    }
+    //if user exists
+    if (findData.length !== 0) {
+      const data = await cartadd.findOneAndUpdate(
+        { email: req.body.email, "products.title": { $ne: req.body.title } },
+        { $addToSet: { products: req.body } },
+        { new: true }
+      );
+      if (data === null) {
+        res.json({ Err: "You have already this item" });
+      } else {
+        res.json({ data });
+      }
+    }
   } catch (error) {
     console.log(`error during adding a product ${error}`);
-    res.json({err:"err"});
+    res.json({ err: "err" });
   }
 };
 // get all the products added to cart
 const getallcartSingle = async (req, res) => {
-      
-     try {
-    const data = await cartadd.find({email:req.params.email});
-    res.json({data})
-   } catch (error) {
+  try {
+    const data = await cartadd.find({ email: req.params.email });
+    res.json({ data });
+  } catch (error) {
     console.log(`error during the getall data ${error}`);
   }
 };
 // get all getallcartSinglelimited
 const getallcartSinglelimited = async (req, res) => {
-  const email = req.body
-     try {
+  const email = req.body;
+  try {
     const data = await cartadd.find().limit(2);
-     res.json({ data:data.map((val)=>val) });
+    res.json({ data: data.map((val) => val) });
   } catch (error) {
     console.log(`error during the getall data ${error}`);
   }
 };
 //remove addto cart single item
-const cartSingleRemove= async (req, res) => {
+const cartSingleRemove = async (req, res) => {
   const { id } = req.params;
-  const email = req.body.user
+  const email = req.body.user;
   try {
-    const singleUserProduct = await cartadd.findOneAndUpdate({email},{
-      $pull:{products:{_id:id}}
-    })
-     res.json({ success: true });
+    const singleUserProduct = await cartadd.findOneAndUpdate(
+      { email },
+      {
+        $pull: { products: { _id: id } },
+      }
+    );
+    res.json({ success: true });
   } catch (error) {
     console.log(error);
   }
@@ -310,7 +323,7 @@ const cartSingleRemove= async (req, res) => {
 // find the single data for adding to the cart
 const findSingleProductforadd = async (req, res) => {
   const { id } = req.params;
-  
+
   try {
     const data = await Product.findById({ _id: id });
     res.json({ data });
@@ -322,27 +335,28 @@ const findSingleProductforadd = async (req, res) => {
 const cartqtyUpdate = async (req, res) => {
   const { id } = req.params;
   const email = req.body.email;
-   
 
   try {
-    const newData = await cartadd.updateMany({email:email,"products._id":id},
-    { $set:{"products.$.qty":req.body.qty}});
-     res.json({ data: newData });
+    const newData = await cartadd.updateMany(
+      { email: email, "products._id": id },
+      { $set: { "products.$.qty": req.body.qty } }
+    );
+    res.json({ data: newData });
   } catch (error) {
     console.log(`error during the update cart qty ${error}`);
   }
 };
 //find a single user
-const  findSingleCartProduct= async (req, res) => {
+const findSingleCartProduct = async (req, res) => {
   const { _id } = req.params;
   const email = req.body.user;
-   try {
+  try {
     //first we find out the whole doc by which user is login
-    const data = await cartadd.findOne({email});
- //we have a special id method for the for finding with id in the nested documents
+    const data = await cartadd.findOne({ email });
+    //we have a special id method for the for finding with id in the nested documents
     // console.log(data.products.id(_id));
     //so we have now the single document of the nested document
-    res.json({data:data.products.id(_id)});
+    res.json({ data: data.products.id(_id) });
   } catch (error) {
     console.log(`error during find a one user's product data ${error}`);
   }
@@ -351,7 +365,7 @@ const  findSingleCartProduct= async (req, res) => {
 //make payment
 const makePayment = (req, res) => {
   const { totalPrice, token } = req.body;
-// console.log(totalPrice,token)
+  // console.log(totalPrice,token)
   const idempotencyKey = uuidv4(); //so that user don't be doubled charged from the same product
   //just in the reallity //we create stripe.customer.create({email,source:tokenid}).then((customer)=>) stripe.create a stripe.charges.create({amount:product.price*100,currency:"usd",customer:customer.id,receipt_email:token.email,description:product.name},{idempotencyKey on this transactoin}).then(result).catch(err)
   return stripe.customers
@@ -363,10 +377,10 @@ const makePayment = (req, res) => {
       stripe.charges.create(
         {
           // original account will be charged here,it recieves from the front end amount object value,for more details visit it ts file to for its object formulation
-          amount: totalPrice*100,
+          amount: totalPrice * 100,
           currency: "pkr",
           customer: customer.id,
-      
+
           //we can send email after a successfull transanction
           //it is now optional just sake of fun
           receipt_email: token.email,
@@ -375,7 +389,7 @@ const makePayment = (req, res) => {
           shipping: {
             name: token.card.name,
             address: {
-              line1:token.card.address_country,
+              line1: token.card.address_country,
               country: token.card.address_country,
             },
           },
@@ -386,7 +400,6 @@ const makePayment = (req, res) => {
     .then((result) => {
       //this result must contain a succedd payment data
       res.status(200).json(result);
-     
     })
     .catch((err) => console.log(`error during the payment ${err}`));
 };
@@ -394,19 +407,19 @@ const makePayment = (req, res) => {
 // get all data
 const orders = async (req, res) => {
   try {
-    const data = await custmOrders.find();
+    const data = await custmOrders.find({ email: req.params.email });
     res.json({ data });
   } catch (error) {
-    console.log(`error during the getall data`);
+    console.log(`error during the find orders for a single user`);
   }
 };
 // customer after sales details
 const userdataDetails = async (req, res) => {
   const data = req.body;
- 
+
   try {
-      const dataCheck = new custmOrders(data);
-      await dataCheck.save();
+    const dataCheck = new custmOrders(data);
+    await dataCheck.save();
   } catch (error) {
     console.log(`error during adding customer details ${error}`);
     console.log(error);
@@ -417,7 +430,10 @@ const userdataDetails = async (req, res) => {
 // customer after sales details
 const aftersalesemptycart = async (req, res) => {
   try {
-      const dataCheck =  await cartadd.findOneAndUpdate({email:req.params.email},{$unset:{products:1}})
+    const dataCheck = await cartadd.findOneAndUpdate(
+      { email: req.params.email },
+      { $unset: { products: 1 } }
+    );
   } catch (error) {
     console.log(`error during adding reomving empty cart ${error}`);
     console.log(error);
@@ -427,13 +443,13 @@ const aftersalesemptycart = async (req, res) => {
 // savePriceCalcRecord
 const savePriceCalcRecord = async (req, res) => {
   const data = req.body;
- 
-   try {
-      const dataCheck = new priceCalculator(data);
-      await dataCheck.save();
-      if(dataCheck){
-       res.json({success:true})
-     }
+
+  try {
+    const dataCheck = new priceCalculator(data);
+    await dataCheck.save();
+    if (dataCheck) {
+      res.json({ success: true });
+    }
   } catch (error) {
     console.log(`error during adding price calculator ${error}`);
     res.json(error);
@@ -441,35 +457,41 @@ const savePriceCalcRecord = async (req, res) => {
 };
 // get data for user price calclutor
 const getDataCalc = async (req, res) => {
-try {
-  const data = await priceCalculator.find();
-  res.json(data)
-} catch (error) {
-  console.log(`error during getting data of price calculutor ${error}`)
-}
-}
+  try {
+    const data = await priceCalculator.find();
+    res.json(data);
+  } catch (error) {
+    console.log(`error during getting data of price calculutor ${error}`);
+  }
+};
 // updatePrice for admin
 const updatePrice = async (req, res) => {
-  
   try {
     const data = await priceCalculator.updateOne(req.body);
-    res.json(data)
+    res.json(data);
   } catch (error) {
-    console.log(`error during updating of price calculutor ${error}`)
+    console.log(`error during updating of price calculutor ${error}`);
   }
+};
+
+// user slips after purchase
+const saveSlip = async (req, res) => {
+  const {email} = req.params;
+  const {title} = req.body;
+  const {price} = req.body;
+  const {totalPrice} = req.body;
+  const {oneProduct} = req.body;
+  const {image} = req.body;
+   console.log(req.body);
+  try {
+    const data = new slip({email,title,price,totalPrice,oneProduct,image});
+    // await data.save();
+    // console.log(`this is ${data}`);
+    res.json(data);
+  } catch (error) {
+    console.log(`error during saving user slip ${error}`);
   }
- 
-  // user slips after purchase
-  const saveSlip = async (req, res) => {
-    try {
-      const data = new slip(req.body);
-      await data.save()
-      console.log(`this is ${data}`)
-      res.json(data)
-    } catch (error) {
-      console.log(`error during saving user slip ${error}`)
-    }
-    }
+};
 
 module.exports = {
   signup,
@@ -487,8 +509,23 @@ module.exports = {
   signupAdmin,
   addServices,
   findSingleService,
-  updateServiceData,saveSlip,
-  deleteServiceData,getDataCalc,getAllTheProduct,
-  getserviceData,addtocart,getallcartSingle,cartSingleRemove,findSingleProductforadd,getallcartSinglelimited,updatePrice,
-  cartqtyUpdate,findSingleCartProduct,makePayment,orders,userdataDetails,aftersalesemptycart,savePriceCalcRecord
+  updateServiceData,
+  saveSlip,
+  deleteServiceData,
+  getDataCalc,
+  getAllTheProduct,
+  getserviceData,
+  addtocart,
+  getallcartSingle,
+  cartSingleRemove,
+  findSingleProductforadd,
+  getallcartSinglelimited,
+  updatePrice,
+  cartqtyUpdate,
+  findSingleCartProduct,
+  makePayment,
+  orders,
+  userdataDetails,
+  aftersalesemptycart,
+  savePriceCalcRecord,
 };

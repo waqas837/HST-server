@@ -182,6 +182,9 @@ const slipSch = new mongoose.Schema({
   oneProduct: {
     type: String,
   },
+  image:{
+    type:String
+  }
 });
 const usersignup = new mongoose.model("usersignup", userData);
 const Product = new mongoose.model("productData", productSchema);
