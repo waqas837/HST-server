@@ -503,6 +503,30 @@ const saveSlip = async (req, res) => {
     console.log(`error during saving user slip ${error}`);
   }
 };
+//verify User
+ 
+const verifyUser = async (req, res) => {
+  const { email } = req.params;
+  try {
+    const isExists = await usersignup.findOne({ email });
+    // console.log(isExists);
+    //respose
+    if (isExists === null) {
+      res.json({ err: "err" });
+    }
+    if (isExists !== null) {
+      res.json({
+        success: "success",
+        user: isExists.email,
+        fulldata: isExists,
+      });
+    }
+  } catch (error) {
+    console.log(`error during sigin the data ${error}`);
+    console.log(error);
+    // res.json({err:error});
+  }
+};
 
 module.exports = {
   signup,
@@ -538,5 +562,5 @@ module.exports = {
   orders,
   userdataDetails,
   aftersalesemptycart,
-  savePriceCalcRecord,
+  savePriceCalcRecord,verifyUser
 };
