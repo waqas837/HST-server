@@ -19,7 +19,7 @@ const signup = async (req, res) => {
     if (data.password === data.cpassword) {
       const dataCheck = new usersignup(data);
       await dataCheck.save();
-      res.json(dataCheck.email);
+      res.json({email:dataCheck.email,userData:dataCheck});
     } else {
       res.json({ passerr: "passerr" });
     }
@@ -41,7 +41,11 @@ const singin = async (req, res) => {
       res.json({ err: "err" });
     }
     if (isExists !== null) {
-      res.json({ success: "success", user: isExists.email ,fulldata:isExists});
+      res.json({
+        success: "success",
+        user: isExists.email,
+        fulldata: isExists,
+      });
     }
   } catch (error) {
     console.log(`error during sigin the data ${error}`);
@@ -476,15 +480,22 @@ const updatePrice = async (req, res) => {
 
 // user slips after purchase
 const saveSlip = async (req, res) => {
-  const {email} = req.params;
-  const {title} = req.body;
-  const {price} = req.body;
-  const {totalPrice} = req.body;
-  const {oneProduct} = req.body;
-  const {image} = req.body;
-   console.log(req.body);
+  const { email } = req.params;
+  const { title } = req.body;
+  const { price } = req.body;
+  const { totalPrice } = req.body;
+  const { oneProduct } = req.body;
+  const { image } = req.body;
+  console.log(req.body);
   try {
-    const data = new slip({email,title,price,totalPrice,oneProduct,image});
+    const data = new slip({
+      email,
+      title,
+      price,
+      totalPrice,
+      oneProduct,
+      image,
+    });
     // await data.save();
     // console.log(`this is ${data}`);
     res.json(data);
