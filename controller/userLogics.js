@@ -8,6 +8,7 @@ const {
   priceCalculator,
   slip,
 } = require("../Model/userSchema");
+const async = require("async")
 const { v4: uuidv4 } = require("uuid");
 const stripe = require("stripe")(
   "sk_test_51IsiGeERaO9lvsvDadobGmPv6X817aNWoxTLY1w72DPPcZMi1Ihf2mMTThB0VNP1ZaGpF0dL33GA3eNOE16zLBkb00CtlKMuR9"
@@ -410,11 +411,12 @@ const makePayment = (req, res) => {
 
 // get all data
 const orders = async (req, res) => {
+
   try {
-    const data = await custmOrders.find({ email: req.params.email });
-    res.json({ data });
+    const data = await slip.find({email:req.params.email});
+     res.json({data})
   } catch (error) {
-    console.log(`error during the find orders for a single user`);
+    console.log(`error during the find orders for a single user${error}`);
   }
 };
 // customer after sales details
@@ -480,29 +482,32 @@ const updatePrice = async (req, res) => {
 
 // user slips after purchase
 const saveSlip = async (req, res) => {
-  const { email } = req.params;
-  const { title } = req.body;
-  const { price } = req.body;
-  const { totalPrice } = req.body;
-  const { oneProduct } = req.body;
-  const { image } = req.body;
-  console.log(req.body);
-  try {
-    const data = new slip({
-      email,
-      title,
-      price,
-      totalPrice,
-      oneProduct,
-      image,
+  console.log(req.body)
+  async.each(req.body,async function (data, callback) {
+const userdata = new slip({
+      email:req.params.email,
+      title:data.title,
+      price:data.price,
+      totalPrice:data.totalPrice,
+      oneProduct:data.oneProduct,
+      image:data.selectedFile,
     });
+    await userdata.save();
+  }).catch(e=>console.log(e))
+}
+ 
+    // const data = new slip({
+    //   email,
+    //   title,
+    //   price,
+    //   totalPrice,
+    //   oneProduct,
+    //   image,
+    // });
     // await data.save();
     // console.log(`this is ${data}`);
-    res.json(data);
-  } catch (error) {
-    console.log(`error during saving user slip ${error}`);
-  }
-};
+     
+
 //verify User
  
 const verifyUser = async (req, res) => {
@@ -519,6 +524,50 @@ const verifyUser = async (req, res) => {
         success: "success",
         user: isExists.email,
         fulldata: isExists,
+      });
+    }
+  } catch (error) {
+    console.log(`error during sigin the data ${error}`);
+    console.log(error);
+    // res.json({err:error});
+  }
+};
+
+//get all the orders to show admin 
+const allOrders = async (req, res) => {
+  try {
+    const isExists = await slip.find();
+    // console.log(isExists);
+    //respose
+    if (isExists === null) {
+      res.json({ err: "err" });
+    }
+    if (isExists !== null) {
+      res.json({
+        success: "success",
+        fulldata: isExists,
+      });
+    }
+  } catch (error) {
+    console.log(`error during sigin the data ${error}`);
+    console.log(error);
+    // res.json({err:error});
+  }
+};
+
+//get all the orders to show admin 
+const update3d = async (req, res) => {
+  console.log(req.body);
+ const {pimage} = req.body
+  try {
+    const isExists = await slip.findByIdAndUpdate({_id:req.params.id},{pimage:pimage});
+    //respose
+    if (isExists === null) {
+      res.json({ err: "err" });
+    }
+    if (isExists !== null) {
+      res.json({
+        success: "success",
       });
     }
   } catch (error) {
@@ -562,5 +611,5 @@ module.exports = {
   orders,
   userdataDetails,
   aftersalesemptycart,
-  savePriceCalcRecord,verifyUser
+  savePriceCalcRecord,verifyUser,allOrders,update3d
 };

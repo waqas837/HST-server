@@ -112,6 +112,7 @@ const serviceSchema = new mongoose.Schema({
 
   price: {
     type: String,
+    defalut:0
   },
   description: {
     type: String,
@@ -172,17 +173,25 @@ const slipSch = new mongoose.Schema({
   },
   title: {
     type: String,
+    // unique:true
   },
   price: {
     type: String,
+    // unique:true
   },
   totalPrice: {
     type: String,
+    // unique:true
   },
   oneProduct: {
     type: String,
+    // unique:true
   },
   image:{
+    type:String,
+    // unique:true
+  },
+  pimage:{
     type:String
   }
 });

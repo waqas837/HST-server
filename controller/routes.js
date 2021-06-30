@@ -34,7 +34,7 @@ const {
   aftersalesemptycart,
   savePriceCalcRecord,
   getDataCalc,
-  getAllTheProduct,
+  getAllTheProduct,allOrders,update3d
 } = require("./userLogics");
 // routes for user account
 router.post("/signup", signup);
@@ -86,6 +86,10 @@ router.get("/getDataCalc", getDataCalc);
 //udpate the record
 router.put("/updatePrice", updatePrice);
 //user slip
-router.post("/saveSlip/:email", saveSlip);
+router.post("/saveSlip/:email", saveSlip); 
+//all orders to show admin
+router.get("/allOrders", allOrders);
+// update3d image  
+router.post("/update3d/:id", update3d);
 
 module.exports = router;
