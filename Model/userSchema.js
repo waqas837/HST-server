@@ -67,9 +67,9 @@ const productSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  view:{
+  view: {
     type: String,
-  }
+  },
 });
 // Product schema
 const product = new mongoose.Schema({
@@ -112,7 +112,7 @@ const serviceSchema = new mongoose.Schema({
 
   price: {
     type: String,
-    defalut:0
+    defalut: 0,
   },
   description: {
     type: String,
@@ -187,13 +187,19 @@ const slipSch = new mongoose.Schema({
     type: String,
     // unique:true
   },
-  image:{
-    type:String,
+  image: {
+    type: String,
     // unique:true
   },
-  pimage:{
-    type:String
-  }
+  pimage: {
+    type: String,
+  },
+});
+// images crud
+const images = new mongoose.Schema({
+  image: {
+    type: String,
+  },
 });
 const usersignup = new mongoose.model("usersignup", userData);
 const Product = new mongoose.model("productData", productSchema);
@@ -203,6 +209,7 @@ const cartadd = new mongoose.model("addtocartitems", addtocart);
 const custmOrders = new mongoose.model("customerorders", orders);
 const priceCalculator = new mongoose.model("priceCalcultr", priceCalc);
 const slip = new mongoose.model("userslip", slipSch);
+const ImgModel = new mongoose.model("imgupload", images);
 
 module.exports = {
   usersignup,
@@ -213,4 +220,5 @@ module.exports = {
   custmOrders,
   priceCalculator,
   slip,
+  ImgModel,
 };

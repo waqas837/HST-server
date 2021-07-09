@@ -7,8 +7,9 @@ const {
   custmOrders,
   priceCalculator,
   slip,
+  ImgModel,
 } = require("../Model/userSchema");
-const async = require("async")
+const async = require("async");
 const { v4: uuidv4 } = require("uuid");
 const stripe = require("stripe")(
   "sk_test_51IsiGeERaO9lvsvDadobGmPv6X817aNWoxTLY1w72DPPcZMi1Ihf2mMTThB0VNP1ZaGpF0dL33GA3eNOE16zLBkb00CtlKMuR9"
@@ -20,7 +21,7 @@ const signup = async (req, res) => {
     if (data.password === data.cpassword) {
       const dataCheck = new usersignup(data);
       await dataCheck.save();
-      res.json({email:dataCheck.email,userData:dataCheck});
+      res.json({ email: dataCheck.email, userData: dataCheck });
     } else {
       res.json({ passerr: "passerr" });
     }
@@ -411,10 +412,9 @@ const makePayment = (req, res) => {
 
 // get all data
 const orders = async (req, res) => {
-
   try {
-    const data = await slip.find({email:req.params.email});
-     res.json({data})
+    const data = await slip.find({ email: req.params.email });
+    res.json({ data });
   } catch (error) {
     console.log(`error during the find orders for a single user${error}`);
   }
@@ -482,34 +482,34 @@ const updatePrice = async (req, res) => {
 
 // user slips after purchase
 const saveSlip = async (req, res) => {
-  console.log(req.body)
-  async.each(req.body,async function (data, callback) {
-const userdata = new slip({
-      email:req.params.email,
-      title:data.title,
-      price:data.price,
-      totalPrice:data.totalPrice,
-      oneProduct:data.oneProduct,
-      image:data.selectedFile,
-    });
-    await userdata.save();
-  }).catch(e=>console.log(e))
-}
- 
-    // const data = new slip({
-    //   email,
-    //   title,
-    //   price,
-    //   totalPrice,
-    //   oneProduct,
-    //   image,
-    // });
-    // await data.save();
-    // console.log(`this is ${data}`);
-     
+  async
+    .each(req.body, async function (data, callback) {
+      const userdata = new slip({
+        email: req.params.email,
+        title: data.title,
+        price: data.price,
+        totalPrice: data.totalPrice,
+        oneProduct: data.oneProduct,
+        image: data.selectedFile,
+      });
+      await userdata.save();
+    })
+    .catch((e) => console.log(e));
+};
+
+// const data = new slip({
+//   email,
+//   title,
+//   price,
+//   totalPrice,
+//   oneProduct,
+//   image,
+// });
+// await data.save();
+// console.log(`this is ${data}`);
 
 //verify User
- 
+
 const verifyUser = async (req, res) => {
   const { email } = req.params;
   try {
@@ -533,7 +533,7 @@ const verifyUser = async (req, res) => {
   }
 };
 
-//get all the orders to show admin 
+//get all the orders to show admin
 const allOrders = async (req, res) => {
   try {
     const isExists = await slip.find();
@@ -555,12 +555,14 @@ const allOrders = async (req, res) => {
   }
 };
 
-//get all the orders to show admin 
+//get all the orders to show admin
 const update3d = async (req, res) => {
-  console.log(req.body);
- const {pimage} = req.body
+  const { pimage } = req.body;
   try {
-    const isExists = await slip.findByIdAndUpdate({_id:req.params.id},{pimage:pimage});
+    const isExists = await slip.findByIdAndUpdate(
+      { _id: req.params.id },
+      { pimage: pimage }
+    );
     //respose
     if (isExists === null) {
       res.json({ err: "err" });
@@ -576,7 +578,93 @@ const update3d = async (req, res) => {
     // res.json({err:error});
   }
 };
-
+//image first upload
+const imageCrud = async (req, res) => {
+  const { path: image } = req.file;
+  try {
+    const isExists = new ImgModel({ image });
+    await isExists.save();
+    //respose
+    if (isExists === null) {
+      res.json({ err: "err" });
+    }
+    if (isExists !== null) {
+      res.json({
+        success: "success",
+      });
+    }
+  } catch (error) {
+    console.log(`error during sigin the data ${error}`);
+    console.log(error);
+    // res.json({err:error});
+  }
+};
+//get all the images
+const showAllIamges = async (req, res) => {
+  try {
+    const isExists = await ImgModel.find();
+    //respose
+    if (isExists === null) {
+      res.json({ err: "err" });
+    }
+    if (isExists !== null) {
+      res.json({
+        success: "success",
+        data: isExists,
+      });
+    }
+  } catch (error) {
+    console.log(`error during sigin the data ${error}`);
+    console.log(error);
+    // res.json({err:error});
+  }
+};
+//delete a single image
+const deleteImage = async (req, res) => {
+  try {
+    const isExists = await ImgModel.findByIdAndDelete({
+      _id: req.params.imgId,
+    });
+    //respose
+    if (isExists === null) {
+      res.json({ err: "err" });
+    }
+    if (isExists !== null) {
+      res.json({
+        success: "success",
+      });
+    }
+  } catch (error) {
+    console.log(`error during delete single image data ${error}`);
+    console.log(error);
+    // res.json({err:error});
+  }
+};
+//updateImage a single image
+const updateImage = async (req, res) => {
+  const { path: image } = req.file;
+  try {
+    const isExists = await ImgModel.findByIdAndUpdate(
+      {
+        _id: req.params.imgId,
+      },
+      { image }
+    );
+    //respose
+    if (isExists === null) {
+      res.json({ err: "err" });
+    }
+    if (isExists !== null) {
+      res.json({
+        success: "success",
+      });
+    }
+  } catch (error) {
+    console.log(`error during delete single image data ${error}`);
+    console.log(error);
+    // res.json({err:error});
+  }
+};
 module.exports = {
   signup,
   singin,
@@ -611,5 +699,12 @@ module.exports = {
   orders,
   userdataDetails,
   aftersalesemptycart,
-  savePriceCalcRecord,verifyUser,allOrders,update3d
+  savePriceCalcRecord,
+  verifyUser,
+  allOrders,
+  update3d,
+  imageCrud,
+  showAllIamges,
+  deleteImage,
+  updateImage,
 };

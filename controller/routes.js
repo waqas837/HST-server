@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/Imageupload");
 const {
   singin,
   signup,
@@ -34,7 +35,13 @@ const {
   aftersalesemptycart,
   savePriceCalcRecord,
   getDataCalc,
-  getAllTheProduct,allOrders,update3d
+  getAllTheProduct,
+  allOrders,
+  update3d,
+  imageCrud,
+  showAllIamges,
+  deleteImage,
+  updateImage,
 } = require("./userLogics");
 // routes for user account
 router.post("/signup", signup);
@@ -86,10 +93,18 @@ router.get("/getDataCalc", getDataCalc);
 //udpate the record
 router.put("/updatePrice", updatePrice);
 //user slip
-router.post("/saveSlip/:email", saveSlip); 
+router.post("/saveSlip/:email", saveSlip);
 //all orders to show admin
 router.get("/allOrders", allOrders);
-// update3d image  
+// update3d image
 router.post("/update3d/:id", update3d);
+//image crud
+router.post("/imageCrud", upload.single("image"), imageCrud);
+// show images
+router.get("/showAllIamges", showAllIamges);
+// deleteImage
+router.delete("/deleteImage/:imgId", deleteImage);
+// updateImage
+router.patch("/updateImage/:imgId", upload.single("image"), updateImage);
 
 module.exports = router;
