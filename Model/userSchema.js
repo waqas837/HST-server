@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 mongoose
   .connect(
-    "mongodb+srv://hst:hst@cluster0.pds0e.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "mongodb+srv://bughlani:bughlani@cluster0.9qki3lg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
